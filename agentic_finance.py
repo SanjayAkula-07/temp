@@ -254,25 +254,22 @@ CUSTOM_CSS = """
 def user_submit(message, history):
     if not message or not message.strip():
         return "", history
-    history = history + [{"role": "user", "content": message}]
+    history = history + [[message, None]]
     return "", history
 
 def bot_respond(history):
     if not API_KEY or API_KEY == "YOUR_GEMINI_API_KEY_HERE":
-        history = history + [{
-            "role": "assistant",
-            "content": "⚠️ Please set your `GEMINI_API_KEY` environment variable before chatting."
-        }]
+        history[-1][1] = "⚠️ Please set your `GEMINI_API_KEY` environment variable before chatting."
         return history, render_dashboard(), json.dumps(USER_DB["U102"], indent=2)
 
-    user_message = history[-1]["content"]
+    user_message = history[-1][0]
     try:
         response = chat.send_message(message=user_message)
         reply_text = response.text
     except Exception as e:
         reply_text = f"System Error: {str(e)}"
 
-    history = history + [{"role": "assistant", "content": reply_text}]
+    history[-1][1] = reply_text
     return history, render_dashboard(), json.dumps(USER_DB["U102"], indent=2)
 
 QUICK_PROMPTS = [
@@ -299,7 +296,6 @@ with gr.Blocks(theme=gr.themes.Soft(primary_hue="violet", secondary_hue="pink"),
 
         with gr.Column(scale=6):
             chatbot = gr.Chatbot(
-                type="messages",
                 height=430,
                 label="Chat with your Agent",
                 show_copy_button=True,
