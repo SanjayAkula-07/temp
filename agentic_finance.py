@@ -251,6 +251,22 @@ CUSTOM_CSS = """
 # 5. UI WITH GRADIO
 # =====================================================================
 
+def _extract_text(content):
+    """A Chatbot message's 'content' can be a plain string, or (in Gradio 6)
+    a list of content-part dicts like [{"type": "text", "text": "..."}].
+    Normalize either shape down to plain text."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for part in content:
+            if isinstance(part, dict):
+                parts.append(part.get("text", ""))
+            elif isinstance(part, str):
+                parts.append(part)
+        return "".join(parts)
+    return "" if content is None else str(content)
+
 def user_submit(message, history):
     if not message or not message.strip():
         return "", history
@@ -265,7 +281,7 @@ def bot_respond(history):
         }]
         return history, render_dashboard(), json.dumps(USER_DB["U102"], indent=2)
 
-    user_message = history[-1]["content"]
+    user_message = _extract_text(history[-1]["content"])
     try:
         response = chat.send_message(message=user_message)
         reply_text = response.text
