@@ -123,11 +123,11 @@ def render_dashboard(user_id: str = "U102") -> str:
     pct = min((total_spent / budget) * 100, 100) if budget else 0
     over_budget = total_spent > budget
 
-    bar_color = "#f43f5e" if over_budget else ("#f59e0b" if pct > 75 else "#22c55e")
+    bar_color = "#dc2626" if over_budget else ("#d97706" if pct > 75 else "#16a34a")
     status_badge = (
-        "<span class='badge badge-danger'>⚠ Over Budget</span>"
+        "<span class='badge badge-danger'>Over Budget</span>"
         if over_budget else
-        "<span class='badge badge-ok'>✓ On Track</span>"
+        "<span class='badge badge-ok'>On Track</span>"
     )
 
     expense_rows = "".join(
@@ -137,14 +137,14 @@ def render_dashboard(user_id: str = "U102") -> str:
     )
 
     goal_rows = "".join(
-        f"<div class='exp-row'><span class='exp-cat'>🎯 {name.replace('_', ' ').title()}</span>"
+        f"<div class='exp-row'><span class='exp-cat'>{name.replace('_', ' ').title()}</span>"
         f"<span class='exp-amt'>{_fmt(amt)}</span></div>"
         for name, amt in profile["savings_goals"].items()
     )
 
     return f"""
     <div class="dash-card">
-      <div class="dash-title">💼 Live Financial Snapshot <span class="dash-user">#{user_id}</span></div>
+      <div class="dash-title">Financial Snapshot <span class="dash-user">Account {user_id}</span></div>
 
       <div class="metric-grid">
         <div class="metric-box">
@@ -177,73 +177,76 @@ def render_dashboard(user_id: str = "U102") -> str:
 
 
 CUSTOM_CSS = """
-.gradio-container { background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 45%, #0f172a 100%) !important; }
+.gradio-container { background: #f3f4f6 !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important; }
 
-#hero-banner {
-    background: linear-gradient(120deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
-    border-radius: 18px;
-    padding: 22px 28px;
-    margin-bottom: 14px;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.35);
+#app-header {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-left: 4px solid #1e3a8a;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
 }
-#hero-banner h1 {
-    color: white; margin: 0; font-size: 26px; font-weight: 800;
+#app-header h1 {
+    color: #111827; margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -0.01em;
 }
-#hero-banner p {
-    color: rgba(255,255,255,0.9); margin: 6px 0 0 0; font-size: 14px;
+#app-header p {
+    color: #6b7280; margin: 6px 0 0 0; font-size: 13px; line-height: 1.5;
 }
 
 .dash-card {
-    background: rgba(30, 27, 75, 0.55);
-    border: 1px solid rgba(139, 92, 246, 0.35);
-    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     padding: 18px 20px;
-    color: #e5e7eb;
-    font-family: inherit;
+    color: #111827;
 }
 .dash-title {
-    font-size: 16px; font-weight: 700; color: #f9fafb; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700; color: #111827; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;
 }
-.dash-user { color: #a78bfa; font-size: 12px; font-weight: 600; }
+.dash-user { color: #9ca3af; font-size: 11px; font-weight: 600; text-transform: none; letter-spacing: 0; }
 
-.metric-grid { display: flex; gap: 12px; margin-bottom: 16px; }
+.metric-grid { display: flex; gap: 12px; margin-bottom: 18px; }
 .metric-box {
-    flex: 1; background: rgba(99, 102, 241, 0.15);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 12px; padding: 10px 12px;
+    flex: 1; background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px; padding: 12px 14px;
 }
-.metric-label { font-size: 11px; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.04em; }
-.metric-value { font-size: 19px; font-weight: 700; color: #ffffff; margin-top: 2px; }
+.metric-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
+.metric-value { font-size: 18px; font-weight: 700; color: #111827; margin-top: 4px; }
 
-.progress-block { margin-bottom: 16px; }
+.progress-block { margin-bottom: 18px; }
 .progress-top {
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: #cbd5e1; margin-bottom: 6px;
+    font-size: 12px; color: #4b5563; margin-bottom: 6px;
 }
 .progress-track {
-    height: 9px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;
+    height: 7px; background: #e5e7eb; border-radius: 999px; overflow: hidden;
 }
 .progress-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
 
 .badge {
-    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+    font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.03em;
 }
-.badge-ok { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-.badge-danger { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+.badge-ok { background: #ecfdf5; color: #047857; }
+.badge-danger { background: #fef2f2; color: #b91c1c; }
 
 .section-label {
-    font-size: 11px; font-weight: 700; color: #c4b5fd; text-transform: uppercase;
-    letter-spacing: 0.05em; margin: 14px 0 6px 0;
+    font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase;
+    letter-spacing: 0.05em; margin: 16px 0 8px 0;
 }
 .exp-row {
-    display: flex; justify-content: space-between; padding: 6px 2px;
-    border-bottom: 1px dashed rgba(255,255,255,0.08); font-size: 13px;
+    display: flex; justify-content: space-between; padding: 7px 2px;
+    border-bottom: 1px solid #f3f4f6; font-size: 13px;
 }
-.exp-cat { color: #d1d5db; }
-.exp-amt { color: #f9fafb; font-weight: 600; }
+.exp-cat { color: #374151; }
+.exp-amt { color: #111827; font-weight: 600; }
 
-#quick-actions .gr-button { border-radius: 999px !important; }
+#quick-actions button { border-radius: 6px !important; font-size: 12px !important; }
 """
 
 
@@ -277,7 +280,7 @@ def bot_respond(history):
     if not API_KEY or API_KEY == "YOUR_GEMINI_API_KEY_HERE":
         history = history + [{
             "role": "assistant",
-            "content": "⚠️ Please set your `GEMINI_API_KEY` environment variable before chatting."
+            "content": "Please set your GEMINI_API_KEY environment variable before chatting."
         }]
         return history, render_dashboard(), json.dumps(USER_DB["U102"], indent=2)
 
@@ -292,35 +295,35 @@ def bot_respond(history):
     return history, render_dashboard(), json.dumps(USER_DB["U102"], indent=2)
 
 QUICK_PROMPTS = [
-    ("💸 Log ₹500 fuel expense", "I just spent ₹500 on fuel, please log it."),
-    ("📊 Check my budget", "How is my budget looking this month?"),
-    ("🍎 Buy Apple stock?", "Should I invest in Apple stock right now?"),
-    ("🏖️ Book flight to Goa?", "Should I book a flight to Goa for my trip?"),
+    ("Log ₹500 fuel expense", "I just spent ₹500 on fuel, please log it."),
+    ("Check my budget", "How is my budget looking this month?"),
+    ("Should I buy Apple stock?", "Should I invest in Apple stock right now?"),
+    ("Book flight to Goa?", "Should I book a flight to Goa for my trip?"),
 ]
 
 with gr.Blocks(title="Financial Decision Agent") as demo:
 
     gr.HTML("""
-    <div id="hero-banner">
-      <h1>🤖 Intelligent Financial Decision Agent</h1>
-      <p>Agentic workflow with real tool calling — queries mock databases and market APIs autonomously before every answer.</p>
+    <div id="app-header">
+      <h1>Intelligent Financial Decision Agent</h1>
+      <p>Autonomous tool-calling workflow — queries account data and market information before producing a recommendation.</p>
     </div>
     """)
 
     with gr.Row():
         with gr.Column(scale=4):
             dashboard_html = gr.HTML(render_dashboard())
-            with gr.Accordion("🔍 Raw Backend State (Debug)", open=False):
+            with gr.Accordion("Backend State (Debug)", open=False):
                 debug_json = gr.Code(json.dumps(USER_DB["U102"], indent=2), language="json")
 
         with gr.Column(scale=6):
             chatbot = gr.Chatbot(
                 height=430,
-                label="Chat with your Agent",
+                label="Conversation",
             )
 
             with gr.Row(elem_id="quick-actions"):
-                quick_buttons = [gr.Button(label, size="sm") for label, _ in QUICK_PROMPTS]
+                quick_buttons = [gr.Button(label, size="sm", variant="secondary") for label, _ in QUICK_PROMPTS]
 
             with gr.Row():
                 txt = gr.Textbox(
@@ -329,7 +332,7 @@ with gr.Blocks(title="Financial Decision Agent") as demo:
                     scale=8,
                     container=False,
                 )
-                send_btn = gr.Button("Send ➤", scale=1, variant="primary")
+                send_btn = gr.Button("Send", scale=1, variant="primary")
 
     # Wire up send (Enter key) and button click
     txt.submit(user_submit, [txt, chatbot], [txt, chatbot], queue=False).then(
@@ -351,6 +354,6 @@ if __name__ == "__main__":
     demo.launch(
         server_name="0.0.0.0",
         server_port=10000,
-        theme=gr.themes.Soft(primary_hue="violet", secondary_hue="pink"),
+        theme=gr.themes.Soft(primary_hue="blue", secondary_hue="slate", neutral_hue="slate"),
         css=CUSTOM_CSS,
     )
